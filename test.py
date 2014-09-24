@@ -2325,7 +2325,7 @@ class EnterCommand(unittest.TestCase):
         #Testing enter command's ability to execute a series of commands
         spaceInputMock = MagicMock(side_effect = 
             ["Jim's Mobile Fun City", "Master Wang's Magical Testing Place"])
-        cityInputMock = MagicMock(side_effect = ["leave"])
+        cityInputMock = MagicMock(side_effect = ["enter", "leave", "enter", "leave"])
         
         with patch('commands.enter_command.raw_input', create = True, new = spaceInputMock):
             with patch('cities.city.raw_input', create = True, new = cityInputMock):
@@ -2352,7 +2352,7 @@ class EnterCommand(unittest.TestCase):
         testCity3 = City("Miles' Magical Cookie Jail City", "Miles' unique testing city", "Come test here")
         testUniquePlace = UniquePlace("Master Wang's Magical Testing Place", "Come test here", "Hi I'm made of cheese.")
         
-        space = Space("Shire", "Home of the Hobbits.", "Mordor",
+        space = Space("Shire", "Home of the Hobbits", "Mordor",
             city = [testCity1, testCity2, testCity3], uniquePlace = testUniquePlace)
         player = Player("The Funlaps", space)
         enterCmd = EnterCommand("Enter Command", "Tests Entering", player)
@@ -2361,7 +2361,8 @@ class EnterCommand(unittest.TestCase):
         spaceInputMock = MagicMock(side_effect = 
             ["Jim's Mobile Fun City", "Seth's Sans-Shabbiness Shack Sh-City", 
             "Miles' Magical Cookie Jail City", "Master Wang's Magical Testing Place"])
-        cityInputMock = MagicMock(side_effect = ["leave", "leave", "leave"])
+        cityInputMock = MagicMock(side_effect = ["enter", "leave", "enter", "leave",
+            "enter", "leave", "enter", "leave"])
         with patch('commands.enter_command.raw_input', create = True, new = spaceInputMock):
             with patch('cities.city.raw_input', create = True, new = cityInputMock):
                 enterCmd.execute()
@@ -2387,7 +2388,7 @@ class EnterCommand(unittest.TestCase):
         testUniquePlace2 = UniquePlace("Jim's Magic Castle of Time-Shifting", "Many different colours", "What time is it?")
         testUniquePlace3 = UniquePlace("Russian Armadillo Mound", "Where Texas meets Russia", "I'm confused.")
         
-        space = Space("Shire", "Home of the Hobbits.", "Mordor",
+        space = Space("Shire", "Home of the Hobbits", "Mordor",
             city = testCity, uniquePlace = [testUniquePlace1, testUniquePlace2, testUniquePlace3])
         player = Player("The Funlaps", space)
         enterCmd = EnterCommand("Enter Command", "Tests Entering", player)
@@ -2396,7 +2397,8 @@ class EnterCommand(unittest.TestCase):
         spaceInputMock = MagicMock(side_effect = 
             ["Jim's Mobile Fun City", "Master Wang's Magical Testing Place", 
             "Jim's Magic Castle of Time-Shifting", "Russian Armadillo Mound"])
-        cityInputMock = MagicMock(side_effect = ["leave"])
+        cityInputMock = MagicMock(side_effect = ["enter", "leave", "enter",
+            "leave", "enter", "leave", "enter", "leave"])
         with patch('commands.enter_command.raw_input', create = True, new = spaceInputMock):
             with patch('cities.city.raw_input', create = True, new = cityInputMock):
                 enterCmd.execute()
@@ -2436,7 +2438,7 @@ class EnterCommand(unittest.TestCase):
             ["Jim's Mobile Fun City", "Seth's Sans-Shabbiness Shack Sh-City", 
             "Miles' Magical Cookie Jail City", "Master Wang's Magical Testing Place",
             "Jim's Magic Castle of Time-Shifting", "Russian Armadillo Mound"])
-        cityInputMock = MagicMock(side_effect = ["leave", "leave", "leave"])
+        cityInputMock = MagicMock(side_effect = ["enter", "leave", "enter", "leave", "enter", "leave", "enter", "leave"])
         with patch('commands.enter_command.raw_input', create = True, new = spaceInputMock):
             with patch('cities.city.raw_input', create = True, new = cityInputMock):
                 enterCmd.execute()
@@ -2472,7 +2474,7 @@ class EnterCommand(unittest.TestCase):
         player = Player("The Funlaps", space)
         enterCmd = EnterCommand("Enter Command", "Tests Entering", player)
 
-        rawInputMock = MagicMock(side_effect = ["enter", "gobbledigook", "stop"])
+        rawInputMock = MagicMock(side_effect = ["enter", "gobbledigook", "cancel"])
         with patch('commands.enter_command.raw_input', create = True, new = rawInputMock):
             enterCmd.execute()
 
