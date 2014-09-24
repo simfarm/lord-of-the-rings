@@ -465,25 +465,18 @@ class MovementTest(unittest.TestCase):
         #Test clearExit() method
         errorMsg = "Port should have been cleared but was not."
 
-        space.clearExit("north")
-        self.assertTrue(space._exits[Direction.North], None, errorMsg)
+        space.clearExit("north", False)
+        self.assertEqual(space._exits[Direction.NORTH], None, errorMsg)
                         
-        space.clearExit("south")
-        self.assertTrue(space._exits[Direction.South], None, errorMsg)
+        space.clearExit("south", False)
+        self.assertEqual(space._exits[Direction.SOUTH], None, errorMsg)
         
-        space.clearExit("east")
-        self.assertTrue(space._exits[Direction.East], None, errorMsg)
+        space.clearExit("east", False)
+        self.assertEqual(space._exits[Direction.EAST], None, errorMsg)
         
-        space.clearExit("west")
-        self.assertTrue(space._exits[Direction.West], None, errorMsg)
-
-        #Test _isExit() method where there are no ports
-        errorMsg = "_isExit() failed to return the correct port where no ports exist."
-        self.assertTrue(space._isExit("north"), None, errorMsg)
-        self.assertTrue(space._isExit("south"), None, errorMsg)
-        self.assertTrue(space._isExit("east"), None, errorMsg)
-        self.assertTrue(space._isExit("west"), None, errorMsg)
-
+        space.clearExit("west", False)
+        self.assertEqual(space._exits[Direction.WEST], None, errorMsg)
+       
     def testMovement2(self):
         """
         Tests for one-way ports and one-way movement.
