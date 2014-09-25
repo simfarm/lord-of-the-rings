@@ -1879,13 +1879,13 @@ class ShopSellItems(unittest.TestCase):
         self.assertTrue(equipped.containsItem(armor), errorMsg)
                         
         #Player chooses to sell items
-        rawInputMock = MagicMock(side_effect = ["sell", "Knife", "yes", "quit"])
+        rawInputMock = MagicMock(side_effect = ["sell", "Knife", "yes", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
-        rawInputMock = MagicMock(side_effect = ["sell", "Leather Tunic", "yes", "quit"])
+        rawInputMock = MagicMock(side_effect = ["sell", "Leather Tunic", "yes", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
-        rawInputMock = MagicMock(side_effect = ["sell", "Potion", "yes", "quit"])
+        rawInputMock = MagicMock(side_effect = ["sell", "Potion", "yes", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
         
@@ -1941,12 +1941,12 @@ class ShopSellItems(unittest.TestCase):
         self.assertTrue(goldNugget in player._inventory._items, errorMsg)
 
         #Player attempts to sell an invalid item
-        rawInputMock = MagicMock(side_effect = ["sell", "gobbledigook", "quit"])
+        rawInputMock = MagicMock(side_effect = ["sell", "gobbledigook", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
 
         #Player gives invalid input when prompted to confirm item sell
-        rawInputMock = MagicMock(side_effect = ["sell", "Gold Nugget", "gobbledigook", "quit"])
+        rawInputMock = MagicMock(side_effect = ["sell", "Gold Nugget", "enter", "gobbledigook", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
             
@@ -1979,8 +1979,8 @@ class ShopPurchaseItems(unittest.TestCase):
 
         player._money = 20
         
-        testWeapon = Potion("Knife", "Russian", 1, 1, 1)
-        testArmor = Potion("Shield of Faith", "Also Russian", 1, 1, 1)
+        testWeapon = Weapon("Knife", "Russian", 1, 1, 1)
+        testArmor = Armor("Shield of Faith", "Also Russian", 1, 1, 1)
         testPotion = Potion("Medium Potion of Healing", "A good concoction. Made by Master Wang.", 1, 5, 3)
         testShop._items.addItem(testWeapon)
         testShop._items.addItem(testArmor)
@@ -1996,13 +1996,13 @@ class ShopPurchaseItems(unittest.TestCase):
             self.assertTrue(isinstance(item, Weapon) or isinstance(item, Armor) or isinstance(item, Potion), errorMsg)
 
         #Player purchases items
-        rawInputMock = MagicMock(side_effect = ["purchase", "Knife", "quit"])
+        rawInputMock = MagicMock(side_effect = ["purchase", "Knife", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
-        rawInputMock = MagicMock(side_effect = ["purchase", "Shield of Faith", "quit"])
+        rawInputMock = MagicMock(side_effect = ["purchase", "Shield of Faith", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
-        rawInputMock = MagicMock(side_effect = ["purchase", "Medium Potion of Healing", "quit"])
+        rawInputMock = MagicMock(side_effect = ["purchase", "Medium Potion of Healing", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
        
@@ -2029,10 +2029,10 @@ class ShopPurchaseItems(unittest.TestCase):
         self.assertFalse(testPotion in testShop._items._items, errorMsg)
         errorMsg = "Medium Potion that was purchased is still in shop wares."
         self.assertFalse(testPotion in testShop._items._items, errorMsg)
-
+        
         #player._money should decrease by the cost of the purchases, which is 5
         errorMsg = "player._money not decreased by correct amount."
-        self.assertEqual(player._money, 15, errorMsg)
+        self.assertEqual(player._money, 13, errorMsg)
         
     def testNegativeCase(self):
         """
@@ -2069,7 +2069,7 @@ class ShopPurchaseItems(unittest.TestCase):
         self.assertTrue(testPotion in testShop._items._items, errorMsg)
         
         #Player attempts to purchase potion
-        rawInputMock = MagicMock(side_effect = ["purchase", "SuperDuperLegendary Potion of Healing", "quit"])
+        rawInputMock = MagicMock(side_effect = ["purchase", "SuperDuperLegendary Potion of Healing", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
 
@@ -2119,7 +2119,7 @@ class ShopPurchaseItems(unittest.TestCase):
         self.assertEqual(testShop._items.count(), 0, errorMsg)
 
         #Player attempts to purchase a non-existent item
-        rawInputMock = MagicMock(side_effect = ["purchase", "gobbledigook", "quit"])
+        rawInputMock = MagicMock(side_effect = ["purchase", "gobbledigook", "enter", "quit", "enter"])
         with patch('cities.shop.raw_input', create = True, new = rawInputMock):
             testShop.enter(player)
 
