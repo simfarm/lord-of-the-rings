@@ -1314,7 +1314,7 @@ class PlayerTest(unittest.TestCase):
         errorMsg = "player._money did not initialize correctly."
         self.assertEqual(player._money, constants.PlayerInitialization.MONEY, errorMsg)
         errorMsg = "player._experience was not intialized correctly."
-        self.assertEqual(player._experience, constants.PlayerInitialization.MONEY, errorMsg)
+        self.assertEqual(player._experience, constants.PlayerInitialization.EXPERIENCE, errorMsg)
         errorMsg = "player._level was not initialized correctly."
         self.assertEqual(player._level, constants.PlayerInitialization.LEVEL, errorMsg)
         
@@ -1346,12 +1346,12 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(player._charmHp, constants.PlayerInitialization.CHARM_HP, errorMsg)
         
         errorMsg = "player._totalAttack did not initiate correctly."
-        self.assertEqual(player._totalAttack, self._attack + self._weaponAttack + 
-            self._charmAttack, errorMsg)
+        self.assertEqual(player._totalAttack, player._attack + player._weaponAttack + 
+            player._charmAttack, errorMsg)
         errorMsg = "player._totalDefense did not initialize correctly."
-        self.assertEqual(player._totalDefense, self._armorDefense + self._charmDefense, errorMsg)
+        self.assertEqual(player._totalDefense, player._armorDefense + player._charmDefense, errorMsg)
         errorMsg = "player._totalMaxHp did not initialize correctly."
-        self.assertEqual(player._totalMaxHp, self._maxHp + self._charmHp, errorMsg)
+        self.assertEqual(player._totalMaxHp, player._maxHp + player._charmHp, errorMsg)
         
     def testAttack(self):
         from player import Player
@@ -1486,10 +1486,10 @@ class PlayerTest(unittest.TestCase):
         #Test for proper player stat change
         errorMsg = "Player level is incorrect."
         self.assertEqual(player._level, 20, errorMsg)
-        errorMsg = "Player Hp is incorrect."
-        self.assertEqual(player._maxHp, constants.PlayerInitialization.MAX_HP * constants.HP_STAT ^ 19, errorMsg)
-        errorMsg = "Player attack is incorrect."
-        self.assertEqual(player._attack, constants.PlayerInitialization.ATTACK * constants.ATTACK_STAT ^ 19, errorMsg)
+        errorMsg = "Player Hp is incorrect ; %s." 
+        self.assertEqual(player._maxHp, 571, errorMsg)
+        errorMsg = "Player attack is incorrect %s."
+        self.assertEqual(player._attack, 105, errorMsg)
         
     def testHeal(self):
         """
