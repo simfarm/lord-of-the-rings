@@ -2843,71 +2843,82 @@ class monsterFactory(unittest.TestCase):
     
     Testing:
     -Number spawn equals base when bonusDifficulty is set to zero.
-    -That number spawn increases as a percentage over default as
-    bonusDifficulty increases.
-    -That regional distributions are present with monster spawns.
     -That monster stats are base stats given zero bonusDifficulty.
     -That monster stats increase as a percentage over default as
     bonusDifficulty increases.
+    -That regional distributions are present with monster spawns.
     """
     def testDefaultSpawnNumber(self):
         """
         Tests that spawn equals base when bonusDifficulty is set to zero.
         """
-        from factories.monster_factory import getMonsters
+        from factories.monster_factory import getMonsters       
         import constants
 
         constants.RegionType.ERIADOR = 1
        
         spawn = getMonsters(5, constants.RegionType.ERIADOR, 0)
 
-        errorMsg = "getMonsters () should have spawned five monsters but did not."
+        errorMsg = "getMonsters() should have spawned five monsters but did not."
         self.assertEqual(len(spawn), 5, errorMsg)
 
     def testDefaultStatGeneration(self):
         #Testing difficulty feature - that default stats are implemented when
         #difficulty set to zero.
         """
-        Mocked up monster spawn distribution of ERIADOR such that Trolls are spawned
-        100% of the time. getMonsters is to spawn three Trolls using the newly mocked
-        up monster distribution.
+        Changed monster spawn distribution of ERIADOR such that Trolls are spawned
+        100% of the time. getMonsters is to spawn three Trolls using the new
+        monster distribution.
         """
         from factories.monster_factory import getMonsters
         from monsters.troll import Troll
         import constants
-        
-        constants.RegionMonsterDistribution = MagicMock(ERIADOR = {Troll: 1})
+       
+        constants.REGIONAL_MONSTER_DISTRIBUTION = {1: {Troll: [0, 1]}}
+
         monsters = getMonsters(3, 1, 0)
+
+        #Tests that monsters are spawned
+        errorMsg = "getMonsters() should have spawned three monsters but did not."
+        self.assertEqual(len(monsters), 3, errorMsg)
+        
+        #Test that monsters are spawned with correct stats
         for monster in monsters:
             errorMsg = "monster._hp was not initiated correctly."
             self.assertEqual(monster._hp, constants.MONSTER_STATS[Troll][0], errorMsg)
             errorMsg = "monster._attack was not initiated correctly."
             self.assertEqual(monster._attack, constants.MONSTER_STATS[Troll][1], errorMsg)
             errorMsg = "monster._experience was not initiated correctly."
-            self.assertEqual(monster._attack, constants.MONSTER_STATS[Troll][2], errorMsg)
+            self.assertEqual(monster._experience, constants.MONSTER_STATS[Troll][2], errorMsg)
             
     def testDifficultyBonusStats(self):
         #-Testing difficulty feature - that monster stats increase as
         #percentage over default. For instance, difficulty = 1 should result
         #in monsters with 200% base monster stats.
         """
-        Mocked up monster distribution of ERIADOR such that Trolls are spawned 100%
+        Changed monster distribution of ERIADOR such that Trolls are spawned 100%
         of the time. getMonsters is to spawn Trolls with 200% base stats. 
         """
         from factories.monster_factory import getMonsters
         from monsters.troll import Troll
         import constants
         
-        constants.RegionMonsterDistribution = MagicMock(ERIADOR = {Troll: 1})
+        constants.REGIONAL_MONSTER_DISTRIBUTION = {1: {Troll: [0, 1]}}
+
         monsters = getMonsters(3, 1, 1)
+
+        #Tests that monsters are spawned
+        errorMsg = "getMonsters() should have spawned three monsters but did not."
+        self.assertEqual(len(monsters), 3, errorMsg)
+        
+        #Test that monsters have been spawned with double stats
         for monster in monsters:
             errorMsg = "monster._hp was not initiated correctly."
             self.assertEqual(monster._hp, 2 * constants.MONSTER_STATS[Troll][0], errorMsg)
             errorMsg = "monster._attack was not initiated correctly."
             self.assertEqual(monster._attack, 2 * constants.MONSTER_STATS[Troll][1], errorMsg)
             errorMsg = "monster._experience was not initiated correctly."
-            self.assertEqual(monster._attack, 2 * constants.MONSTER_STATS[Troll][2], errorMsg)
-
+            self.assertEqual(monster._experience, 2 * constants.MONSTER_STATS[Troll][2], errorMsg)
     
     def testRegionalSpawn(self):
         #-Testing that regional spawns work: that monster spawn reflects
@@ -2915,8 +2926,6 @@ class monsterFactory(unittest.TestCase):
         """
         Tests that monsters of each type in a region's distribution
         spawn, given a large enough sample size.
-
-        TODO: this still doesn't work. only one monster type spawned.
         """
         from factories.monster_factory import getMonsters
         from monsters.troll import Troll
@@ -2924,9 +2933,10 @@ class monsterFactory(unittest.TestCase):
         from monsters.goblin import Goblin
         from monsters.great_goblin import GreatGoblin
         import constants
-            
-        constants.RegionMonsterDistribution = MagicMock(ERIADOR = {Troll: .5,
-            Nazgul: 1})
+        
+        #Testcase #1: RegionType.ERIADOR
+        constants.REGIONAL_MONSTER_DISTRIBUTION = {constants.RegionType.ERIADOR: {Troll: [0, .5], Nazgul: [.5, 1]}}
+           
         monstersEriador = getMonsters(5000, constants.RegionType.ERIADOR, 0)
 
         #Checking to see that Nazgul and Trolls are spawned
@@ -2946,13 +2956,13 @@ class monsterFactory(unittest.TestCase):
         self.assertTrue(numberNazgul != 0, errorMsg)
         errorMsg = "No trolls spawned."
         self.assertTrue(numberTroll != 0, errorMsg)
-
-        #Checking to see that Goblin and GreatGoblin are spawned
-        constants.RegionMonsterDistribution = MagicMock(HIGH_PASS = {Goblin: .5,
-            GreatGoblin: 1})
+        
+        #Testcase #2: RegionType.HIGH_PASS
+        constants.REGIONAL_MONSTER_DISTRIBUTION = {constants.RegionType.HIGH_PASS: {Goblin: [0, .5], GreatGoblin: [.5, 1]}}
+        
         monstersHighPass = getMonsters(5000, constants.RegionType.HIGH_PASS, 0)
-        print monstersEriador
-        print monstersHighPass
+
+        #Checking to see that Goblins and Great Goblins are spawned
         numberGoblin = 0
         numberGreatGoblin = 0
         for monster in monstersHighPass:
