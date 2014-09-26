@@ -2857,9 +2857,10 @@ class monsterFactory(unittest.TestCase):
         from factories.monster_factory import getMonsters
         import constants
 
-        constants.RegionType.ERIADOR = MagicMock(return_value=1)
-        
+        constants.RegionType.ERIADOR = 1
+       
         spawn = getMonsters(5, constants.RegionType.ERIADOR, 0)
+
         errorMsg = "getMonsters () should have spawned five monsters but did not."
         self.assertEqual(len(spawn), 5, errorMsg)
         
