@@ -79,16 +79,17 @@ class GameTest(unittest.TestCase):
         
         #Create mock objects
         helpCommand = MagicMock()
-        helpCommand.execute = MagicMock()
         helpCommand._time = True
-        battle = MagicMock()
+        nextCommand = MagicMock()
+        nextCommand.execute = MagicMock(return_value=True)
+        g._battlePhase = MagicMock()
         g._parser.getNextCommand = MagicMock(return_value=helpCommand)
 
         g._nextTurn()
-        errorMsg = "battle was supposed to have been called but was not."
-        self.assertTrue(battle.called, errorMsg)
-        errorMsg = "Game._nextTurn() failed to execute command"
+        errorMsg = "g._nextTurn() failed to execute command"
         self.assertTrue(helpCommand.execute.called, errorMsg)
+        errorMsg = "battle was supposed to have been called but was not."
+        self.assertTrue(g._battlePhase.called, errorMsg)
     
 class ParserTest(unittest.TestCase):
     """
