@@ -6,16 +6,16 @@ import unittest
 import xmlrunner
 from mock import (MagicMock, patch)
 
-class GameTest(unittest.TestCase):
+class NextTurnTest(unittest.TestCase):
     """
-    Tests game class.
+    Tests _nextTurn in game.py.
 
     A few iterations:
-    -testGame1: Command does not involve passage of time.
-    -testGame2: Command does involve passage of time. Chance of battle = 0%.
-    -testGame3: Command does involve passage of time. Chance of battle = 100%.
+    -testNextTurn: Command does not involve passage of time.
+    -testNextTurn2: Command does involve passage of time. Chance of battle = 0%.
+    -testNextTurn3: Command does involve passage of time. Chance of battle = 100%.
     """
-    def testGame1(self):
+    def testNextTurn(self):
         """
         Testing that helpCommand.execute.called when command does not
         involve passage of time.
@@ -36,7 +36,7 @@ class GameTest(unittest.TestCase):
         errorMsg = "Game._nextTurn() failed to execute command"
         self.assertTrue(helpCommand.execute.called, errorMsg)
         
-    def testCase2(self):
+    def testNextTurn2(self):
         """
         Testing that helpCommand.execute.called when command involves
         a passing of time. Battle probability = 0%. 
@@ -63,10 +63,11 @@ class GameTest(unittest.TestCase):
         errorMsg = "Game._nextTurn() failed to execute command"
         self.assertTrue(helpCommand.execute.called, errorMsg)
 
-    def testCase3(self):
+    def testNextTurn3(self):
         """
         Testing that helpCommand.execute.called when command involves
-        a passing of time. Battle probability = 100%.
+        a passing of time and battle probability = 100%. Here, _battlePhase()
+        should get called.
         """
         from game import Game
         from space import Space
@@ -86,11 +87,69 @@ class GameTest(unittest.TestCase):
         g._parser.getNextCommand = MagicMock(return_value=helpCommand)
 
         g._nextTurn()
-        errorMsg = "g._nextTurn() failed to execute command"
+        errorMsg = "g._nextTurn() failed to execute command."
         self.assertTrue(helpCommand.execute.called, errorMsg)
         errorMsg = "battle was supposed to have been called but was not."
         self.assertTrue(g._battlePhase.called, errorMsg)
+
+class ExecutionCheckTest(unittest.TestCase):
+    """
+    Tests _executionCheck method in game.py.
+    """
+    def testPositiveCase(self):
+        """
+        Here, player can move in all directions. Therefore, all of the movement
+        commands should work and executionCheck() should return True for all 
+        movement commands.
+        """
+        from game import Game
+        from space import Space
+        from player import Player
+
+        from commands.north_command import NorthCommand
+        from commands.south_command import SouthCommand
+        from commands.east_command import EastCommand
+        from commands.west_command import WestCommand
+        
+        g = Game()
+        g._player = MagicMock()
+
+        g._player.canMoveNorth = MagicMock(return_value=True)
+        g._player.canMoveSouth = MagicMock(return_value=True)
+        g._player.canMoveEast = MagicMock(return_value=True)
+        g._player.canMoveWest = MagicMock(return_value=True)
+
+        northCmd = NorthCommand("north", "For movement", g._player)
+        southCmd = SouthCommand("south", "For movement", g._player)
+        eastCmd = EastCommand("east", "For movement", g._player)
+        westCmd = WestCommand("west", "For movement", g._player)
+        
+        nextCommand = northCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned True for northCmd but did not."
+        self.assertEqual(result, True, errorMsg)
+
+        nextCommand = southCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned True for southCmd but did not."
+        self.assertEqual(result, True, errorMsg)
+
+        nextCommand = eastCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned True for eastCmd but did not."
+        self.assertEqual(result, True, errorMsg)
+
+        nextCommand = westCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned True for westCmd but did not."
+        self.assertEqual(result, True, errorMsg)
     
+    def testNegativeCase(self):
+        """
+        Here, player cannot move in any direction. Therefore _executionCheck() should 
+        return False for all movement commands.
+        """
+
 class ParserTest(unittest.TestCase):
     """
     Tests Parser class.
