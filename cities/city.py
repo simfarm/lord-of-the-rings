@@ -67,9 +67,11 @@ class City(Place):
         """
         buildingDictionary = {}
         buildings = self.getBuildings()
+        
         #If there is one building
         if isinstance(buildings, Building):
             buildingDictionary[buildings.getName()] = buildings
+            
         #If there are multiple buildings
         elif isinstance(buildings, list):
             for building in buildings:
@@ -82,20 +84,22 @@ class City(Place):
         Helper method that prints the building contained in city.
         """
         buildings = self.getBuildings()
+        
         #If there is one building
         if isinstance(buildings, Building):
             print "\t%s: %s" % (buildings.getName(), buildings.getDescription())
+            
         #If there are multiple buildings
         elif isinstance(buildings, list):
             for building in buildings:
                 print "\t%s: %s" % (building.getName(), building.getDescription())
         print ""
         
-    def enter(self, player):  
+    def enter(self, player):
         """
         The action sequence for city.
 
-        @param player:       The current player
+        @param player:       The current player.
         """
         buildingDictionary = self._createDictionaryOfBuildings()
 
@@ -111,7 +115,7 @@ class City(Place):
             #Print list of buildings
             self._printBuildings()
             
-            print "To go to a building type its name. Otherwise, type 'leave'"
+            print "To go to a building type its name. Otherwise, type 'leave.'"
             command = raw_input("Where would you like to go?\n")
             
             #If player chooses to leave the city

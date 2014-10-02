@@ -29,8 +29,7 @@ class Shop(Building):
         @param numItems:    The number of items that can be bought at the 
                             shop.
         @param quality:     The quality of the items that may be bought at 
-                            shop.
-                            Ranges from 1-20.
+                            shop. Ranges from 1-20.
         """
         Building.__init__(self, name, description, greetings)
 
@@ -111,7 +110,7 @@ What is your choice?
             elif isinstance(item, Item):
                 pass
             else:
-                errorMsg = "Invalid item - shop_factory, checkItems()"
+                errorMsg = "Invalid item - Shop, checkItems()"
                 raise AssertionError(errorMsg)
                 
     #Gives advanced descriptions of items 
@@ -154,7 +153,7 @@ What is your choice?
                 print "\t\t-Weight: %s" % item.getWeight()
                 print "\t\t-Cost: %s" % item.getCost()
             else:
-                errorMsg = "Invalid item - shop_factory, checkItemsStats()"
+                errorMsg = "Invalid item - Shop, checkItemsStats()"
                 raise AssertionError(errorMsg)
                 
     #For selling items in inventory to shop
@@ -162,6 +161,9 @@ What is your choice?
         """
         Allows for player to sell items to shop. After each sale,
         the sold item gets added to shop wares.
+        
+        If item sold is theOneRing, theOneRing disappears from shop
+        wares.
         
         @param player:    The player object.
         """
@@ -187,21 +189,20 @@ What is your choice?
                 " Response: yes/no. " % (item.getName(), sellValue, 
                 constants.CURRENCY))
                 
-                #Sale execution - with affirmative
+                #User chooses to sell item
                 if choice.lower() == "yes":
                     player.removeFromInventory(item)
                     player.increaseMoney(sellValue)
                     self._items.addItem(item)
                     print "Sold %s for %s." % (item.getName(), sellValue)
                     
-                    #Check to see if item sold was theOneRing
+                    #Special sequence for theOneRing
                     result = self._checkTheOneRingSale(item)
-                    #If it is, then theOneRing is removed from shop wares
                     if result:
                         print "\nSome strange men come by."
                         self._items.removeItem(item)
                 
-                #Player changes mind
+                #User changes mind
                 elif choice.lower() == "no":
                     print "Didn't sell item."
                 
@@ -243,14 +244,17 @@ What is your choice?
         player.getMoney(), constants.CURRENCY)
         print ""
         itemToPurchase = raw_input("Which item would you like to purchase? ")
+        
         #Check to find object associated with user-given string
         for item in self._items:
             if itemToPurchase == item.getName():
+            
                 #Check to see if player has enough money to purchase item
                 if player.getMoney() <= item.getCost():
                     print "Not enough money to purchase item."
                     return
                 print ""
+                
                 #Actual purchase execution
                 if not player.addToInventory(item):
                     return

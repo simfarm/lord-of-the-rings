@@ -8,7 +8,8 @@ class Square(Building):
     Squares are children of Building and inhabit cities.
     
     Squares serve as public spaces that allow players to
-    interface with city folk.
+    interface with city folk. Player may also receive items 
+    from talking to people.
     """
     def __init__(self, name, description, greetings, talk = None, 
     items = None):
@@ -21,8 +22,8 @@ class Square(Building):
                                square.
         @param talk:           A dictionary of names-responses used for 
                                dialogue.
-        @param items:          Items that the player may receive for talking 
-                               to people.
+        @param items:          A dictionary of names-items that serve as 
+                               bonuses for dialoguing with people.
         """
         Building.__init__(self, name, description, greetings)
 
@@ -55,7 +56,7 @@ class Square(Building):
             for person in self._talk:
                 print "\t %s" % person
 
-            prompt = "\nWhom would you like to talk to ('quit' to quit)? "
+            prompt = "\nWhom would you like to talk to (\"quit\" to quit)? "
             choice = raw_input(prompt)
 
             #The option to leave

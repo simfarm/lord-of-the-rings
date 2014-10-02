@@ -44,28 +44,28 @@ class Inn(Building):
             " \nResponse: \"yes\" or \"no.\" ")
             print ""
             
-            #Heal option   
+            #User chooses to heal
             if choice == "yes":
-                #Money check and transfer
+                #If player has enough money
                 if player.getMoney() >= cost:
                     player.decreaseMoney(cost)
-                    #Actual healing operation
+                    #Heal player
                     self._heal(player)
                     print "%s was healed at %s cost! %s has %s %s remaining." \
                           % (player.getName(), cost, player.getName(), 
                           player.getMoney(), constants.CURRENCY)
-                #Not enough money
+                #If player does not have enough money
                 else:
                     print "%s doesn't have enough money." % player.getName()
                 raw_input("Press enter to continue. ")
                 return
                 
-            #Non-use option
+            #User chooses not to heal
             elif choice == "no":
                 print "\"Thanks for coming to %s.\"" % self._name
                 raw_input("Press enter to continue. ")
                 
-            #For invalid input
+            #User inputs something invalid
             else:
                 print "\"What?\""
                 raw_input("Press enter to continue. ")
@@ -80,7 +80,7 @@ class Inn(Building):
 
     def _heal(self, player):
         """
-        Heals player to maxHp.
+        Heals player to TotalMaxHp.
 
         @param player:    The player object.
         """
