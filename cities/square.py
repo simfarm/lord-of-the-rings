@@ -9,7 +9,7 @@ class Square(Building):
     
     Squares serve as public spaces that allow players to
     interface with city folk. Player may also receive items 
-    from talking to people.
+    by talking to people.
     """
     def __init__(self, name, description, greetings, talk = None, 
     items = None):
@@ -88,7 +88,6 @@ class Square(Building):
         Helper method that is responsible for handing player receiving items.
         
         @param player:  The player object.
-        @param gift:    The gift that player is supposed to receive.
         @param choice:  The person that the user has chosen to talk to.
         """
         gift = self._items[choice]

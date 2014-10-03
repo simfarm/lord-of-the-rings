@@ -58,7 +58,7 @@ class CommandWords(object):
         """
         Removes a command by name.
 
-        @precondition:      isCommand()
+        @precondition:      isCommand().
 
         @param name:        Name of command.
         """

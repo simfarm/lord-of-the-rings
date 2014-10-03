@@ -6,7 +6,6 @@ from items.weapon import Weapon
 from items.armor import Armor
 from items.potion import Potion
 from items.charm import Charm
-from items.item import Item
 
 class CheckInventoryCommand(Command):
     """
