@@ -157,7 +157,7 @@ def _monsterNumGen(player):
     location = player.getLocation()
     region = location.getRegion()
     bonusDifficulty = location.getBattleBonusDifficulty()
-
+   
     #Calculate region spawn
     if region == constants.RegionType.ERIADOR:
         monsterCount = (1 + bonusDifficulty) * constants.RegionBaseSpawn.ERIADOR

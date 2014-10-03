@@ -201,17 +201,57 @@ class BattlePhaseTest(unittest.TestCase):
         Mocks battleProbability such that battle() should get called.
         """
         from game import Game
+        import battle_engine
         import constants
         
+        #Create test objects
         g = Game()
+
+        space = MagicMock()
+        space.getRegion = MagicMock(return_value = constants.RegionType.ERIADOR)
+        space.getBattleProbability = MagicMock(return_value=1)
+
         g._player = MagicMock()
-        g._battleProbability = 1
+        g._player.getLocation = MagicMock(return_value = space)
+       
         battle_engine.battle = MagicMock()
-        
-        g._battlePhase()
-        battle_engine.battle.assert_called_with(self._player, 
-            constants.BattleEngineContext.RANDOM)
-        
+        constants.BattleEngine.RUN_PROBABILITY_SUCCESS = 1
+       
+       #Assert that battle() is called when it should be called
+        rawInputMock = MagicMock(return_value = "run")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            g._battlePhase()
+        errorMsg = "battle() should have been called but was not."
+        self.assertTrue(battle_engine.battle.called, errorMsg)       
+    
+    def testNegativeCase(self):
+        """
+        Mocks battleProbability such that battle() should not get called.
+        """
+        from game import Game
+        import battle_engine
+        import constants
+
+        #Create test objects
+        g = Game()
+
+        space = MagicMock()
+        space.getRegion = MagicMock(return_value = constants.RegionType.ERIADOR)
+        space.getBattleProbability = MagicMock(return_value = 0)
+
+        g._player = MagicMock()
+        g._player.getLocation = MagicMock(return_value = space)
+       
+        battle_engine.battle = MagicMock()
+        constants.BattleEngine.RUN_PROBABILITY_SUCCESS = 1
+       
+       #Assert that battle() is called when it should be called
+        rawInputMock = MagicMock(return_value = "run")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            g._battlePhase()
+        errorMsg = "battle() should have been called but was not."
+        self.assertFalse(battle_engine.battle.called, errorMsg)       
+
 class ParserTest(unittest.TestCase):
     """
     Tests Parser class.
