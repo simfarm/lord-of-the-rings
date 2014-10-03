@@ -308,18 +308,78 @@ class MonsterNumGenTest(unittest.TestCase):
     """
     Tests _monsterNumGen() of battle_engine.py.
     """
-    from player import Player
-    from space import Space
+    def testMonsterGen(self):
+        from player import Player
+        from space import Space
+        from battle_engine import _monsterNumGen
+        import constants
 
-    eriadorSpace = Space("Eriador", "", constants.RegionType.ERIADOR)
-    barrowDownsSpace = Space("Barrow Downs", "", constants.RegionType.BARROW_DOWNS)
-    highPassSpace = Space("High Pass", "", constants.RegionType.HIGH_PASS)
-    enedwaithSpace = Space("Enedwaith", "", constants.RegionType.ENEDWAITH)
-    moriaSpace = Space("Moria", "", constants.RegionType.MORIA)
-    rhovanionSpace = Space("Rhovanion", "", constants.RegionType.RHOVANION)
-    rohanSpace = Space("Rohan", "", constants.RegionType.ROHAN)
-    gondorSpace = Space("Gondor", "", constants.RegionType.GONDOR)
-    mordorSpace = Space("Mordor", "", constants.RegionType.MORDOR)
+        #Create test objects
+        eriadorSpace = Space("Eriador", "", constants.RegionType.ERIADOR)
+        barrowDownsSpace = Space("Barrow Downs", "", constants.RegionType.BARROW_DOWNS)
+        highPassSpace = Space("High Pass", "", constants.RegionType.HIGH_PASS)
+        enedwaithSpace = Space("Enedwaith", "", constants.RegionType.ENEDWAITH)
+        moriaSpace = Space("Moria", "", constants.RegionType.MORIA)
+        rhovanionSpace = Space("Rhovanion", "", constants.RegionType.RHOVANION)
+        rohanSpace = Space("Rohan", "", constants.RegionType.ROHAN)
+        gondorSpace = Space("Gondor", "", constants.RegionType.GONDOR)
+        mordorSpace = Space("Mordor", "", constants.RegionType.MORDOR)
+        
+        player = Player("Russian", eriadorSpace)
+        result = _monsterNumGen(player)
+        
+        #Test for valid outputs for the game's regions
+        errorMsg = "_monsterNumGen failed for ERIADOR."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", barrowDownsSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for BARROW_DOWNS."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", highPassSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for HIGH_PASS."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", enedwaithSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for ENEDWAITH."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", moriaSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for MORIA."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", rhovanionSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for RHOVANION."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", rohanSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for ROHAN."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", gondorSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_monsterNumGen failed for GONDOR."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
+
+        player = Player("Russian", gondorSpace)
+        result = _monsterNumGen(player)
+        errorMsg = "_mosnterNumGen failed for MORDOR."
+        self.assertTrue(isinstance(result, int), errorMsg)
+        self.assertTrue(result >= 0, errorMsg)
 
 class ParserTest(unittest.TestCase):
     """
