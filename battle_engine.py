@@ -107,6 +107,14 @@ def _battleSetup(player, context):
     """
     Generates variables for battle engine and prints battle
     splash screen.
+
+    @param player:    The player object.
+    @param context:   Constant that is used to determine whether 
+                      battle is a random battle or a boss battle.
+
+    @return:          For random battles: a bonus-difficulty stat
+                      and a list of monster objects to fight. For
+                      boss battles, the bonus-difficulty stat.
     """
     #For random battles
     if context == constants.BattleEngineContext.RANDOM:

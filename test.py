@@ -252,6 +252,75 @@ class BattlePhaseTest(unittest.TestCase):
         errorMsg = "battle() should have been called but was not."
         self.assertFalse(battle_engine.battle.called, errorMsg)       
 
+class battleSetupTest(unittest.TestCase):
+    """
+    Tests _battleSetup helper function in battle_engine.py.
+    """
+    def testRandomBattle(self):
+        """
+        Tests that output for random battles is correct.
+        """
+        from battle_engine import _battleSetup
+        from monsters.monster import Monster
+        import constants
+        
+        #Create mock objects
+        player = MagicMock()
+        space = MagicMock()
+
+        player.getLocation = MagicMock(return_value = space)
+        space.getRegion = MagicMock(return_value = constants.RegionType.ERIADOR)
+        space.getBattleBonusDifficulty = MagicMock(return_value = 1.5)
+
+        context = constants.BattleEngineContext.RANDOM
+
+        #Run helper method and verify return information
+        result = _battleSetup(player, context)
+        
+        errorMsg = "battleBonusDifficulty was not returned correctly."
+        self.assertEqual(result[0], 1.5, errorMsg)
+
+        errorMsg = "List of monster objects was not generated correctly."
+        for object in result[1]:
+            self.assertTrue(isinstance(object, Monster), errorMsg)
+    
+    def testStoryBattle(self):
+        from battle_engine import _battleSetup
+        import constants
+        
+        #Create mock objects
+        player = MagicMock()
+        space = MagicMock()
+
+        player.getLocation = MagicMock(return_value = space)
+        space.getRegion = MagicMock(return_value = constants.RegionType.ERIADOR)
+        space.getBattleBonusDifficulty = MagicMock(return_value = 1.5)
+
+        context = constants.BattleEngineContext.STORY
+
+        #Run helper method and verify return information
+        result = _battleSetup(player, context)
+        
+        errorMsg = "battleBonusDifficulty was not returned correctly."
+        self.assertEqual(result, 1.5, errorMsg)
+
+class MonsterNumGenTest(unittest.TestCase):
+    """
+    Tests _monsterNumGen() of battle_engine.py.
+    """
+    from player import Player
+    from space import Space
+
+    eriadorSpace = Space("Eriador", "", constants.RegionType.ERIADOR)
+    barrowDownsSpace = Space("Barrow Downs", "", constants.RegionType.BARROW_DOWNS)
+    highPassSpace = Space("High Pass", "", constants.RegionType.HIGH_PASS)
+    enedwaithSpace = Space("Enedwaith", "", constants.RegionType.ENEDWAITH)
+    moriaSpace = Space("Moria", "", constants.RegionType.MORIA)
+    rhovanionSpace = Space("Rhovanion", "", constants.RegionType.RHOVANION)
+    rohanSpace = Space("Rohan", "", constants.RegionType.ROHAN)
+    gondorSpace = Space("Gondor", "", constants.RegionType.GONDOR)
+    mordorSpace = Space("Mordor", "", constants.RegionType.MORDOR)
+
 class ParserTest(unittest.TestCase):
     """
     Tests Parser class.
