@@ -307,12 +307,13 @@ def _itemFind(player, experience):
     location = player.getLocation()
     
     #Item find for low-level uniques
-    lowLevel = triangular(constants.ItemFind.lowLevel)
-    if experience > lowLevel:
-        item = random.choice(lowLevelFindableUniques)
-        print "You found %s!" % item.getName()
-        if not player.addToInventory(item):
-            location.addItem(item)
+    if player.getLevel() < 15:
+        lowLevel = triangular(constants.ItemFind.lowLevel)
+        if experience > lowLevel:
+            item = random.choice(lowLevelFindableUniques)
+            print "You found %s!" % item.getName()
+            if not player.addToInventory(item):
+                location.addItem(item)
 
     #Item find for high-level uniques
     highLevel = triangular(constants.ItemFind.highLevel)

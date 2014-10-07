@@ -452,15 +452,15 @@ class ItemFindTest(unittest.TestCase):
     """
     Tests _itemFind of battle_engine.py
     """ 
-    def testPositiveLowLevel(self):
+    def testItemSpawn(self):
         """
-        Here, experience gained is at the top of the lowLevel unique distribution.
-        Verifies that a low-level unique is now in player inventory.
+        Here, experience gained is at the top of the unique probability distribution.
+        Verifies that a low-, high-, and elite-level unique is generated.
         """
         from space import Space
         from player import Player
         from battle_engine import _itemFind
-        from items.unique_items import lowLevelFindableUniques 
+        import items.unique_items   
         import constants
 
         space = Space("", "", "")
@@ -476,13 +476,40 @@ class ItemFindTest(unittest.TestCase):
        
         #Test
         _itemFind(player, experience)
+
         lowLevelInInventory = 0
         for item in player._inventory._items:
-            if item in lowLevelFindableUniques:
+            if item in items.unique_items.lowLevelFindableUniques:
                 lowLevelInInventory += 1
+
+        highLevelInInventory = 0
+        for item in player._inventory._items:
+            if item in items.unique_items.highLevelFindableUniques:
+                highLevelInInventory += 1
+
+        eliteLevelInInventory = 0
+        for item in player._inventory._items:
+            if item in items.unique_items.eliteLevelFindableUniques:
+                eliteLevelInInventory += 1
 
         errorMsg = "Player inventory is supposed to have a low-level unique but does not."
         self.assertTrue(lowLevelInInventory >= 1, errorMsg)
+        errorMsg = "Player inventory is supposed to have a high-level unique but does not."
+        self.assertTrue(highLevelInInventory >= 1, errorMsg)
+        errorMsg = "Player inventory is supposed to have an elite-level unique but does not."
+        self.assertTrue(eliteLevelInInventory >= 1, errorMsg)
+
+    def testLevelLimit(self):
+        """
+        Spawn for low-level uniques caps out at 14. In other words, if player is
+        level 15 or higher, lowLevelFindableUniques will no longer spawn.
+
+        This test tests that this is actually the case.
+        """
+        import space
+        import player
+        from items.unique_items import lowLevelFindableUniques
+
 
 class ParserTest(unittest.TestCase):
     """
