@@ -298,7 +298,9 @@ def _monsterAttackPhase(player, monsters):
 def _itemFind(player, experience):
     """
     Calculates whether player finds an item and which item he finds.
-    
+    Method either adds item to inventory or drops item to space, 
+    depending on whether player is overburdened. 
+
     @param player:         The player object.
     @param experience:     The experience gained from the battle.
     """
@@ -306,7 +308,7 @@ def _itemFind(player, experience):
     
     #Item find for low-level uniques
     lowLevel = triangular(constants.ItemFind.lowLevel)
-    if experience > lowLevel and lowLevelFindableUniques:
+    if experience > lowLevel:
         item = random.choice(lowLevelFindableUniques)
         print "You found %s!" % item.getName()
         if not player.addToInventory(item):
@@ -314,7 +316,7 @@ def _itemFind(player, experience):
 
     #Item find for high-level uniques
     highLevel = triangular(constants.ItemFind.highLevel)
-    if experience > highLevel and highLevelFindableUniques:
+    if experience > highLevel:
         item = random.choice(highLevelFindableUniques)
         print "You found %s!" % item.getName()
         if not player.addToInventory(item):
@@ -322,7 +324,7 @@ def _itemFind(player, experience):
             
     #Item find for elite-level uniques
     eliteLevel = triangular(constants.ItemFind.eliteLevel)
-    if experience > eliteLevel and eliteLevelFindableUniques:
+    if experience > eliteLevel:
         item = random.choice(eliteLevelFindableUniques)
         print "You found %s!" % item.getName()
         if not player.addToInventory(item):
