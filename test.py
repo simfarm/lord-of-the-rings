@@ -448,6 +448,42 @@ class MonsterAttackPhaseTest(unittest.TestCase):
         errorMsg = "_monsterAttackPhase should have returned False but did not."
         self.assertFalse(result, errorMsg)
 
+class ItemFindTest(unittest.TestCase):
+    """
+    Tests _itemFind of battle_engine.py
+    """ 
+    def testPositiveLowLevel(self):
+        """
+        Here, experience gained is at the top of the lowLevel unique distribution.
+        Verifies that a low-level unique is now in player inventory.
+        """
+        from space import Space
+        from player import Player
+        from battle_engine import _itemFind
+        from items.unique_items import lowLevelFindableUniques 
+        import constants
+
+        space = Space("", "", "")
+        player = Player("", space)
+        player._weightLimit = 1000
+
+        experience = constants.ItemFind.lowLevel[1]
+        
+        #Pretest
+        inventory = player._inventory._items
+        errorMsg = "Player inventory was not empty to start with."
+        self.assertEqual(inventory, [], errorMsg)
+       
+        #Test
+        _itemFind(player, experience)
+        lowLevelInInventory = 0
+        for item in player._inventory._items:
+            if item in lowLevelFindableUniques:
+                lowLevelInInventory += 1
+
+        errorMsg = "Player inventory is supposed to have a low-level unique but does not."
+        self.assertTrue(lowLevelInInventory >= 1, errorMsg)
+
 class ParserTest(unittest.TestCase):
     """
     Tests Parser class.

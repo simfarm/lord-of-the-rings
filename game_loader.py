@@ -967,7 +967,6 @@ def getWorld():
         if items.unique_items.lowLevelFindableUniques:
             #Determine which unique item
             item = random.choice(items.unique_items.lowLevelFindableUniques)
-            items.unique_items.lowLevelFindableUniques.remove(item)
             #Determine which space
             space = random.choice(spaces)
             #Add item to space
