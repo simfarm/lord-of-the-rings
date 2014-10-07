@@ -461,13 +461,12 @@ class ItemFindTest(unittest.TestCase):
         from player import Player
         from battle_engine import _itemFind
         import items.unique_items   
-        import constants
 
         space = Space("", "", "")
         player = Player("", space)
         player._weightLimit = 1000
 
-        experience = constants.ItemFind.lowLevel[1]
+        experience = 5000 
         
         #Pretest
         inventory = player._inventory._items
@@ -506,10 +505,33 @@ class ItemFindTest(unittest.TestCase):
 
         This test tests that this is actually the case.
         """
-        import space
-        import player
-        from items.unique_items import lowLevelFindableUniques
+        from space import Space
+        from player import Player
+        from battle_engine import _itemFind
+        import items.unique_items   
 
+        space = Space("", "", "")
+        player = Player("", space)
+        player._level = 15
+        player._weightLimit = 1000
+
+        experience = 5000
+                                
+        #Pretest
+        inventory = player._inventory._items
+        errorMsg = "Player inventory was not empty to start with."
+        self.assertEqual(inventory, [], errorMsg)
+                       
+        #Test
+        _itemFind(player, experience)
+        
+        lowLevelInInventory = 0
+        for item in player._inventory._items:
+            if item in items.unique_items.lowLevelFindableUniques:
+                lowLevelInInventory += 1
+       
+        errorMsg = "Player is not supposed to have low-level findable uniques but does."
+        self.assertTrue(lowLevelInInventory >= 1, errorMsg)
 
 class ParserTest(unittest.TestCase):
     """

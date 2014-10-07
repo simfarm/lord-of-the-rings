@@ -305,7 +305,7 @@ def _itemFind(player, experience):
     @param experience:     The experience gained from the battle.
     """
     location = player.getLocation()
-    
+   
     #Item find for low-level uniques
     if player.getLevel() < 15:
         lowLevel = triangular(constants.ItemFind.lowLevel)
