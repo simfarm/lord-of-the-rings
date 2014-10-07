@@ -377,9 +377,76 @@ class MonsterNumGenTest(unittest.TestCase):
 
         player = Player("Russian", gondorSpace)
         result = _monsterNumGen(player)
-        errorMsg = "_mosnterNumGen failed for MORDOR."
+        errorMsg = "_monsterNumGen failed for MORDOR."
         self.assertTrue(isinstance(result, int), errorMsg)
         self.assertTrue(result >= 0, errorMsg)
+
+class MonsterAttackPhaseTest(unittest.TestCase):
+    """
+    Tests _monsterAttackPhase of battle_engine.py.
+    """
+    def testMonsterAttackPhase(self):
+        """
+        Create three monsters and call this method. Verify that player stats 
+        are changed appropriately. In this instance, player health remains 
+        above zero.
+        """
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        from battle_engine import _monsterAttackPhase
+
+        space = Space("Shire", "", "Eregion")
+        player = Player("Russian", space)
+        
+        monster = Monster("Jack", "", [10, 2, 2], "", "")
+        monster2 = Monster("Jack", "", [10, 2, 2], "", "")
+        monster3 = Monster("Jack", "", [10, 2, 2], "", "")
+        monsters = [monster, monster2, monster3]
+
+        #Pretest
+        errorMsg = "Player instantiated with incorrect starting HP."
+        self.assertEqual(player._hp, 20, errorMsg)
+
+        #Test
+        rawInputMock = MagicMock(return_value = "enter")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _monsterAttackPhase(player, monsters)
+        errorMsg = "Player health should be at 14 but is not."
+        self.assertEqual(player._hp, 14, errorMsg)
+
+    def testMonsterAttackPhase(self):
+        """
+        Create three monsters and call this method. Verify that player stats 
+        are changed appropriately. In this instance, player health should 
+        equal zero and _monsterAttackPhase should return False.
+        """
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        from battle_engine import _monsterAttackPhase
+
+        space = Space("Shire", "", "Eregion")
+        player = Player("Russian", space)
+        
+        monster = Monster("Jack", "", [10, 20, 2], "", "")
+        monster2 = Monster("Jack", "", [10, 20, 2], "", "")
+        monster3 = Monster("Jack", "", [10, 20, 2], "", "")
+        monsters = [monster, monster2, monster3]
+
+        #Pretest
+        errorMsg = "Player instantiated with incorrect starting HP."
+        self.assertEqual(player._hp, 20, errorMsg)
+
+        #Test
+        rawInputMock = MagicMock(return_value = "enter")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            result =_monsterAttackPhase(player, monsters)
+        errorMsg = "Player health should be at 0 but is not."
+        self.assertEqual(player._hp, 0, errorMsg)
+
+        errorMsg = "_monsterAttackPhase should have returned False but did not."
+        self.assertFalse(result, errorMsg)
 
 class ParserTest(unittest.TestCase):
     """
