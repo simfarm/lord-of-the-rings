@@ -1752,7 +1752,7 @@ class InnTest(unittest.TestCase):
         player._money = 10
 
         #Player chooses to stay at the inn
-        rawInputMock = MagicMock(side_effect = ["yes"])
+        rawInputMock = MagicMock(side_effect = ["enter", "yes", "enter"])
         with patch('cities.inn.raw_input', create=True, new=rawInputMock):
             testInn.enter(player)
         
@@ -1778,7 +1778,7 @@ class InnTest(unittest.TestCase):
         player._money = 2
 
         #Player chooses to stay at the inn
-        rawInputMock = MagicMock(side_effect = ["yes"])
+        rawInputMock = MagicMock(side_effect = ["enter", "yes", "enter"])
         with patch('cities.inn.raw_input', create=True, new=rawInputMock):
             testInn.enter(player)
         
@@ -1804,7 +1804,7 @@ class InnTest(unittest.TestCase):
         player._money = 10
 
         #Player chooses not to stay at the inn
-        rawInputMock = MagicMock(side_effect = ["no"])
+        rawInputMock = MagicMock(side_effect = ["enter", "no", "enter"])
         with patch('cities.inn.raw_input', create=True, new=rawInputMock):
             testInn.enter(player)
         
@@ -1827,7 +1827,8 @@ class InnTest(unittest.TestCase):
         player = Player("Frodo", space)
         
         #For invalid user input
-        rawInputMock = MagicMock(side_effect = ["gobbledigook", "gobbledigook", "gobbledigook", "no"])
+        rawInputMock = MagicMock(side_effect = ["enter", "gobbledigook", 
+            "enter", "no", "enter"])
         with patch('cities.inn.raw_input', create=True, new=rawInputMock):
             testInn.enter(player)
         
