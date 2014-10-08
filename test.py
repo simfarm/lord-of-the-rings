@@ -448,6 +448,12 @@ class MonsterAttackPhaseTest(unittest.TestCase):
         errorMsg = "_monsterAttackPhase should have returned False but did not."
         self.assertFalse(result, errorMsg)
 
+class PlayerAttackPhase(unittest.TestCase):
+    """
+    Tests that _playerAttackPhase() of battle_engine.py works correctly.
+    """
+    pass
+
 class ItemFindTest(unittest.TestCase):
     """
     Tests _itemFind of battle_engine.py
@@ -521,7 +527,7 @@ class ItemFindTest(unittest.TestCase):
         inventory = player._inventory._items
         errorMsg = "Player inventory was not empty to start with."
         self.assertEqual(inventory, [], errorMsg)
-                       
+       
         #Test
         _itemFind(player, experience)
         
@@ -531,7 +537,70 @@ class ItemFindTest(unittest.TestCase):
                 lowLevelInInventory += 1
        
         errorMsg = "Player is not supposed to have low-level findable uniques but does."
-        self.assertTrue(lowLevelInInventory >= 1, errorMsg)
+        self.assertEqual(lowLevelInInventory, 0, errorMsg)
+   
+    def testAddToSpace(self):
+        """
+        If player is overburdened, items will drop to space instead. This test 
+        tests that this is actually the case.
+        """
+        from space import Space
+        from player import Player
+        from battle_engine import _itemFind
+
+        space = Space("", "", "")
+        player = Player("", space)
+        player._weightLimit = 0
+
+        experience = 5000
+
+        #Pretest
+        inventory = player._inventory._items
+        errorMsg = "Player inventory was not empty to start with."
+        self.assertEqual(inventory, [], errorMsg)
+
+        #Test
+        _itemFind(player, experience)
+
+        errorMsg = "Space is supposed to have three items but does not."
+        self.assertEqual(len(space._items._items), 3, errorMsg)
+
+class EndSequenceTest(unittest.TestCase):
+    """
+    _endSequence is a helper method in battle_engine.py. It is responsible 
+    for declaring player victory, calling _itemFind, and increasing player
+    money and experience.
+    """
+    def testEndSequence(self):
+        """
+        Test to make sure that player stats get updated correctly.
+        """
+        from space import Space
+        from player import Player
+        from battle_engine import _endSequence
+
+        space = Space("", "", "")
+        player = Player("", space)
+        _itemFind = MagicMock()
+
+        #Pretest
+        errorMsg = "Player was not instantiated with correct stats."
+        self.assertEqual(player._money, 20, errorMsg)
+        self.assertEqual(player._experience, 0, errorMsg)
+
+        #Test
+        money = 50
+        experience = 100
+        earnings = [money, experience]
+
+        _endSequence(player, earnings)
+
+        errorMsg = "_itemFind was supposed to have been called but was not."
+        self.assertTrue(_itemFind.called_with(player, experience), errorMsg)
+        errorMsg = "player._money was not updated to correct value."
+        self.assertEqual(player._money, 70, errorMsg)
+        errorMsg = "player._experience was not updated to correct value."
+        self.assertEqual(player._experience, 100, errorMsg)
 
 class ParserTest(unittest.TestCase):
     """
