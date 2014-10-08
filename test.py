@@ -2175,6 +2175,7 @@ class Square(unittest.TestCase):
         testCity = City("Test City", "Testing city", "Hello to Test City. See Chris' Square", testSquare)
         space = Space("Shire", "Home of the Hobbits.", "Mordor", city = testCity)
         player = Player("Frodo", space)
+        inventory = player._inventory
         
         #Test: talking to Master Wang (several items to give)
         rawInputMock = MagicMock(side_effect = ["Master Wang", "enter", "quit", "enter"])
