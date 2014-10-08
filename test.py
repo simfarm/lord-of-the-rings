@@ -2144,7 +2144,7 @@ class Square(unittest.TestCase):
     """
     Tests square buildings.
     """
-    def PositiveCase(self):
+    def testPositiveCase(self):
         """
         Player talks to various people in Square.
 
@@ -2214,7 +2214,7 @@ class Square(unittest.TestCase):
         with patch('cities.square.raw_input', create = True, new = rawInputMock):
             testSquare.enter(player)
             
-    def NegativeCase(self):
+    def testNegativeCase(self):
         """
         Player attempts to talk to invalid person.
         """
