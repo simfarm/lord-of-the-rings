@@ -2177,7 +2177,7 @@ class Square(unittest.TestCase):
         player = Player("Frodo", space)
         
         #Test: talking to Master Wang (several items to give)
-        rawInputMock = MagicMock(side_effect = ["Master Wang", "enter", "quit"])
+        rawInputMock = MagicMock(side_effect = ["Master Wang", "enter", "quit", "enter"])
         with patch('cities.square.raw_input', create = True, new = rawInputMock):
             testSquare.enter(player)
 
@@ -2198,7 +2198,7 @@ class Square(unittest.TestCase):
         self.assertFalse(potion in testSquare._items, errorMsg)
         
         #Test: talking to Miles (one item to give)
-        rawInputMock = MagicMock(side_effect = ["Miles", "enter", "quit"])
+        rawInputMock = MagicMock(side_effect = ["Miles", "enter", "quit", "enter"])
         with patch('cities.square.raw_input', create = True, new = rawInputMock):
             testSquare.enter(player)
 
@@ -2211,7 +2211,7 @@ class Square(unittest.TestCase):
         self.assertFalse(cookies in testSquare._items, errorMsg)
 
         #Test: talking to Putin (no items to give)
-        rawInputMock = MagicMock(side_effect = ["Putin", "enter", "quit"])
+        rawInputMock = MagicMock(side_effect = ["Putin", "enter", "quit", "enter"])
         with patch('cities.square.raw_input', create = True, new = rawInputMock):
             testSquare.enter(player)
             
@@ -2232,7 +2232,7 @@ class Square(unittest.TestCase):
         space = Space("Shire", "Home of the Hobbits.", "Mordor", city = testCity)
         player = Player("Frodo", space)
         
-        rawInputMock = MagicMock(side_effect = ["gobbledigook", "enter", "quit"])
+        rawInputMock = MagicMock(side_effect = ["gobbledigook", "enter", "quit", "enter"])
         with patch('cities.square.raw_input', create = True, new = rawInputMock):
             testSquare.enter(player)
             
