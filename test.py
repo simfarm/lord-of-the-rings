@@ -452,7 +452,110 @@ class PlayerAttackPhase(unittest.TestCase):
     """
     Tests that _playerAttackPhase() of battle_engine.py works correctly.
     """
-    pass
+    def testMonsterIdentification(self):
+        """
+        Tests that monster identification works correctly.
+
+        When player selects one monster to attack, that monster is attacked
+        and only that monster is attacked.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+    
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 5
+        monster = Monster("Target", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jack", "", [10, 10, 10], "", "")
+        monster3 = Monster("", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Target")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+
+        errorMsg = "Target monster health not reduced."
+        self.assertEqual(monster._hp, 5, errorMsg)
+        errorMsg = "Monster2 health changed when it was not supposed to have been changed."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        errorMsg = "Monster3 health changed when it was not supposed to have been changed."
+        self.assertEqual(monster3._hp, 10, errorMsg)
+
+    def testMonsterDoesNotExist(self):
+        """
+        Tests that nothing happens when user chooses to attack a non-existent monster.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 5
+        monster = Monster("Jill", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jack", "", [10, 10, 10], "", "")
+        monster3 = Monster("", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+
+        #Test
+        rawInputMock = MagicMock(return_value = "gobbledigook")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+
+        errorMsg = "Test monster health reduced when it should not have been."
+        for monster in monsters:
+            self.assertEqual(monster._hp, 10, errorMsg)
+
+    def testMultipleMonstersSameName(self):
+        """
+        Tests that when there are multiple monsters with the same name that only 
+        one of them gets attacked.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 5
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jack", "", [10, 10, 10], "", "")
+        monster3 = Monster("Jack", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+
+        errorMsg = "monster._hp is not correct. "
+        self.assertEqual(monster._hp, 5, errorMsg)
+        errorMsg = "Health of other monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
 
 class ItemFindTest(unittest.TestCase):
     """
