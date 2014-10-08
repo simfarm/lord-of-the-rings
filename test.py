@@ -1304,7 +1304,7 @@ class PlayerTest(unittest.TestCase):
         from space import Space
         import constants
 
-        space = Space("Shire", "Home of the Hobbits.", "Mordor")
+        space = Space("Shire", "Home of the Hobbits", "Mordor")
         player = Player("Frodo", space)
 
         errorMsg = "Frodo", "player._name did not initialize correctly."
@@ -1313,6 +1313,19 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(player._location, space, errorMsg)
         errorMsg = "player._money did not initialize correctly."
         self.assertEqual(player._money, constants.PlayerInitialization.MONEY, errorMsg)
+        errorMsg = "player._experience was not intialized correctly."
+        self.assertEqual(player._experience, constants.PlayerInitialization.MONEY, errorMsg)
+        errorMsg = "player._level was not initialized correctly."
+        self.assertEqual(player._level, constants.PlayerInitialization.LEVEL, errorMsg)
+        
+        errorMsg = "player._hp was not initialized correctly."
+        self.assertEqual(player._hp, constants.PlayerInitialization.MAX_HP, errorMsg)
+        errorMsg = "Player was not created with full health."
+        self.assertEqual(player._maxHp, constants.PlayerInitialization.MAX_HP, errorMsg)
+        errorMsg = "player_attack was not initialized correctly."
+        self.assertEqual(player._attack, constants.PlayerInitialization.ATTACK, errorMsg)
+        errorMsg = "player._weightLimit was not initialized correctly."
+        self.assertEqual(player._weightLimit, constants.PlayerInitialization.WEIGHT_LIMIT, errorMsg)
         
         emptyList = []
         errorMsg = "player._inventory was not initialized correctly."
@@ -1320,24 +1333,25 @@ class PlayerTest(unittest.TestCase):
         errorMsg = "player._equipped was not initialized correctly."
         self.assertEqual(player._equipped.getItems(), emptyList, errorMsg)
 
-        errorMsg = "player._experience was not initialized correctly."
-        self.assertEqual(player._experience, constants.PlayerInitialization.EXPERIENCE, errorMsg)
-        errorMsg = "player._level was not initialized correctly."
-        self.assertEqual(player._level, constants.PlayerInitialization.LEVEL, errorMsg)
-
-        errorMsg = "Player was not created with full health."
-        self.assertEqual(player._totalMaxHp, constants.HP_STAT, errorMsg)
-        errorMsg = "player._hp was not initialized correctly."
-        self.assertEqual(player._hp, constants.HP_STAT, errorMsg)
-        errorMsg = "player_attack was not initialized correctly."
-        self.assertEqual(player._attack, constants.ATTACK_STAT, errorMsg)
-
         errorMsg = "player._weaponAttack was not initialized correctly."
         self.assertEqual(player._weaponAttack, constants.PlayerInitialization.WEAPON_ATTACK, errorMsg)
         errorMsg = "player._armorDefense was not initialized correctly."
         self.assertEqual(player._armorDefense, constants.PlayerInitialization.ARMOR_DEFENSE, errorMsg)
+        
+        errorMsg = "self._charmAttack did not initialize correctly."
+        self.assertEqual(player._charmAttack, constants.PlayerInitialization.CHARM_ATTACK, errorMsg)
+        errorMsg = "self._charmDefense did not initialize correctly."
+        self.assertEqual(player._charmDefense, constants.PlayerInitialization.CHARM_DEFENSE, errorMsg)
+        errorMsg = "self._charmHp did not initialize correctly."
+        self.assertEqual(player._charmHp, constants.PlayerInitialization.CHARM_HP, errorMsg)
+        
         errorMsg = "player._totalAttack did not initiate correctly."
-        self.assertEqual(player._totalAttack, player._attack + player._weaponAttack, errorMsg)
+        self.assertEqual(player._totalAttack, self._attack + self._weaponAttack + 
+            self._charmAttack, errorMsg)
+        errorMsg = "player._totalDefense did not initialize correctly."
+        self.assertEqual(player._totalDefense, self._armorDefense + self._charmDefense, errorMsg)
+        errorMsg = "player._totalMaxHp did not initialize correctly."
+        self.assertEqual(player._totalMaxHp, self._maxHp + self._charmHp, errorMsg)
         
     def testAttack(self):
         from player import Player
@@ -1653,8 +1667,8 @@ class PlayerTest(unittest.TestCase):
         #Pretest: items in player._inventory        
         errorMsg = "Failed to initialize test character correctly."
         self.assertTrue(item in player._inventory._items, errorMsg)
-        self.assertTrue(weapon in player._inventory_items, errorMsg)
-        self.assertTrue(armor in player._inventory_items, errorMsg)
+        self.assertTrue(weapon in player._inventory._items, errorMsg)
+        self.assertTrue(armor in player._inventory._items, errorMsg)
 
         #Testing player.removeFromInventory()
         player.removeFromInventory(item)
