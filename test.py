@@ -2685,49 +2685,107 @@ class CheckStatsCommand(unittest.TestCase):
 
 class CheckMapCommand(unittest.TestCase):
     """
-    Checks that "map" does not crash the game.
+    Checks that running MapCommand does not crash the game.
     """
     def testCase(self):
+        """
+        Tests whether game crashes when ports exist in all four directions.
+        """
         from space import Space
         from player import Player
         from commands.map_command import MapCommand
-        from game_loader import getWorld
 
-        space = Space("Chocolate Mountain", "Home of Chocolate Rain", "Mordor")
-        player = Player("Russian", space)
+        #Create dummy world map
+        central = Space("Central", "Center Space", "Mordor")
+        north = Space("North", "North Space", "Mordor")
+        south = Space("South", "South Space", "Mordor")
+        east = Space("East", "East Space", "Mordor")
+        west = Space("West", "West Space", "Mordor")
+        
+        #Link dummy spaces
+        central.createExit("north", north, outgoingOnly = False)
+        central.createExit("south", south, outgoingOnly = False)
+        central.createExit("east", east, outgoingOnly = False)
+        central.createExit("west", west, outgoingOnly = False)
+        
+        player = Player("Russian", central)
         mapCmd = MapCommand("Map Command", "Test command", player)
 
-        #Load map and test on a variety of different player locations
-        getWorld()
+        #Execute mapCmd on a variety of player locations
         mapCmd.execute()
         
-        player._location = shire
+        player._location = north
         mapCmd.execute()
-
-        player._location = mistyMountains
+        
+        player._location = south
         mapCmd.execute()
-
-        player._location = southernMirkwood
+        
+        player._location = east
         mapCmd.execute()
-
-        player._location = moria
+        
+        player._location = west
         mapCmd.execute()
+        
+    def testCase2(self):
+        """
+        Tests whether game crashes when multiple ports exist in all four 
+        directions.
+        """
+        from space import Space
+        from player import Player
+        from commands.map_command import MapCommand
 
-        player._location = fieldOfCelebrant
+        #Create dummy world map
+        central = Space("Central", "Center Space", "Mordor")
+        north = Space("North", "North Space", "Mordor")
+        north2 = Space("North2", "North Space2", "Mordor")
+        south = Space("South", "South Space", "Mordor")
+        south2 = Space("South2", "South Space2", "Mordor")
+        east = Space("East", "East Space", "Mordor")
+        east2 = Space("East2", "East Space2", "Mordor")
+        west = Space("West", "West Space", "Mordor")
+        west2 = Space("West2", "West Space2", "Mordor")
+        
+        #Link dummy spaces
+        central.createExit("north", north, outgoingOnly = False)
+        central.createExit("south", south, outgoingOnly = False)
+        central.createExit("east", east, outgoingOnly = False)
+        central.createExit("west", west, outgoingOnly = False)
+        central.createExit("north", north2, outgoingOnly = False)
+        central.createExit("south", south2, outgoingOnly = False)
+        central.createExit("east", east2, outgoingOnly = False)
+        central.createExit("west", west2, outgoingOnly = False)
+        
+        player = Player("Russian", central)
+        mapCmd = MapCommand("Map Command", "Test command", player)
+
+        #Execute mapCmd on a variety of player locations
         mapCmd.execute()
-
-        player._location = anorien
+        
+        player._location = north
         mapCmd.execute()
-
-        player._location = cirithUngol
+        
+        player._location = south
         mapCmd.execute()
-
-        player._location = ithilien
+        
+        player._location = east
         mapCmd.execute()
-
-        player._location = fangorn
+        
+        player._location = west
         mapCmd.execute()
-
+        
+        player._location = north2
+        mapCmd.execute()
+        
+        player._location = south2
+        mapCmd.execute()
+        
+        player._location = east2
+        mapCmd.execute()
+        
+        player._location = west2
+        mapCmd.execute()
+        
 class monster(unittest.TestCase):
     """
     Tests Monster objects.
