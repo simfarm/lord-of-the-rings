@@ -1423,7 +1423,7 @@ class PlayerTest(unittest.TestCase):
         errorMsg = "Testcase - armorDefense is more than attack failed."
         self.assertEqual(player._hp, 10, errorMsg)
         
-        #Testcase - armorDefense is attack
+        #Testcase - armorDefense is equal to attack
         player._hp = 10
         player.takeAttack(2)
         errorMsg = "Testcase - armorDefense is attack failed."
@@ -1485,13 +1485,11 @@ class PlayerTest(unittest.TestCase):
 
         #Test for proper player stat change
         errorMsg = "Player level is incorrect."
-        self.assertEqual(player._level, floor(player._experience/20) + 1, errorMsg)
+        self.assertEqual(player._level, 20, errorMsg)
         errorMsg = "Player Hp is incorrect."
-        self.assertEqual(player._totalMaxHp, player._level * constants.HP_STAT, errorMsg)
+        self.assertEqual(player._maxHp, constants.PlayerInitialization.MAX_HP * constants.HP_STAT ^ 19, errorMsg)
         errorMsg = "Player attack is incorrect."
-        self.assertEqual(player._attack, player._level * constants.ATTACK_STAT, errorMsg)
-        errorMsg = "Player totalAttack is incorrect."
-        self.assertEqual(player._totalAttack, player._attack + player._weaponAttack, errorMsg)
+        self.assertEqual(player._attack, constants.PlayerInitialization.ATTACK * constants.ATTACK_STAT ^ 19, errorMsg)
         
     def testHeal(self):
         """
@@ -1630,17 +1628,6 @@ class PlayerTest(unittest.TestCase):
         self.assertTrue(newItem in player._inventory._items, errorMsg)
         self.assertTrue(newWeapon in player._inventory._items, errorMsg)
         self.assertTrue(newArmor in player._inventory._items, errorMsg)
-        
-        #Negative case: adding items already in inventory to inventory
-        numberOfItems = player._inventory.count()
-        
-        player.addToInventory(newItem)
-        player.addToInventory(newWeapon)
-        player.addToInventory(newArmor)
-        newNumberOfItems = player._inventory.count()
-        
-        errorMsg = "Number of items increased when it should not have."
-        self.assertEqual(numberOfItems, newNumberOfItems, errorMsg)
 
     def testRemoveFromInventory(self):
         from player import Player
