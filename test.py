@@ -525,7 +525,7 @@ class PlayerAttackPhase(unittest.TestCase):
     def testMultipleMonstersSameName(self):
         """
         Tests that when there are multiple monsters with the same name that only 
-        one of them gets attacked.
+        one of them gets attacked. Only the first one will get attacked.
         """
         from battle_engine import _playerAttackPhase
         from space import Space
@@ -556,6 +556,253 @@ class PlayerAttackPhase(unittest.TestCase):
         errorMsg = "Health of other monsters affected."
         self.assertEqual(monster2._hp, 10, errorMsg)
         self.assertEqual(monster3._hp, 10, errorMsg)
+
+    def testMonsterKill(self):
+        """
+        Tests that monster kill results in that monster being removed from the 
+        monsters list.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 500
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Charley", "", [10, 10, 10], "", "")
+        monster3 = Monster("Joshua", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "monsters was not adjusted for monster kill."
+        self.assertEqual(monsters, [monster2, monster3], errorMsg)
+        errorMsg = "Health of other monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+
+    def testMonsterKill2(self):
+        """
+        Tests that monster kill results in only one monster being removed from the
+        list when there are multiple monsters in list with same name. 
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 500
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jack", "", [10, 10, 10], "", "")
+        monster3 = Monster("Jack", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "monsters was not adjusted for monster kill."
+        self.assertEqual(monsters, [monster2, monster3], errorMsg)
+        errorMsg = "Health of other monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+   
+    def testExperienceMoneyIncrease(self):
+        """
+        Tests that monster kill results in correct experience and money increase. 
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        import constants
+        import math
+
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 500
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jacques", "", [10, 10, 10], "", "")
+        monster3 = Monster("Moofey", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+    
+        targetExperience = monster._experience
+        targetMoney = math.floor(targetExperience/constants.BattleEngine.MONEY_CONSTANT)
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            result = _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "Check that monsters list was updated correctly."
+        self.assertEqual(monsters, [monster2, monster3], errorMsg)
+        errorMsg = "Health of monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+        
+        errorMsg = "money not returned correctly."
+        self.assertEqual(result[0], targetMoney, errorMsg)
+        errorMsg = "experience not returned correctly."
+        self.assertEqual(result[1], targetExperience, errorMsg)
+
+    def testExperienceMoneyNegative(self):
+        """
+        Tests that money and experience params remain unchanged when
+        no monster is killed. 
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        import constants
+        import math
+
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 0
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jacques", "", [10, 10, 10], "", "")
+        monster3 = Monster("Moofey", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+    
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            result = _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "Check that monsters list is unchanged."
+        self.assertEqual(monsters, [monster, monster2, monster3], errorMsg)
+        errorMsg = "Health of monsters affected."
+        self.assertEqual(monster._hp, 10, errorMsg)
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+        
+        errorMsg = "money not returned correctly."
+        self.assertEqual(result[0], 0, errorMsg)
+        errorMsg = "experience not returned correctly."
+        self.assertEqual(result[1], 0, errorMsg)
+
+    def testExperienceMoneyBonus(self):
+        """
+        Test that money and experience params are updated accordingly for 
+        bonusDifficulty.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        import constants
+        import math
+
+        #Stub params
+        bonusDifficulty = 1
+        earnings = [0, 0]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 500
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jacques", "", [10, 10, 10], "", "")
+        monster3 = Monster("Moofey", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+    
+        targetExperience = monster._experience * (1 + bonusDifficulty)
+        targetMoney = math.floor(targetExperience/constants.BattleEngine.MONEY_CONSTANT)
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            result = _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "Check that monsters list is unchanged."
+        self.assertEqual(monsters, [monster2, monster3], errorMsg)
+        errorMsg = "Health of other monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+        
+        errorMsg = "money not returned correctly."
+        self.assertEqual(result[0], targetMoney, errorMsg)
+        errorMsg = "experience not returned correctly."
+        self.assertEqual(result[1], targetExperience, errorMsg)
+
+    def testExperienceMoneyUpdate(self):
+        """
+        Test that money and experience params are updated accordingly with non-zero
+        starting values.
+        """
+        from battle_engine import _playerAttackPhase
+        from space import Space
+        from player import Player
+        from monsters.monster import Monster
+        import constants
+        import math
+
+        #Stub params
+        bonusDifficulty = 0
+        earnings = [100, 100]
+
+        #Create test objects
+        space = Space("", "", "")
+        player = Player("", space)
+        player._totalAttack = 500
+        monster = Monster("Jack", "", [10, 10, 10], "", "")
+        monster2 = Monster("Jacques", "", [10, 10, 10], "", "")
+        monster3 = Monster("Moofey", "", [10, 10, 10], "", "")
+
+        monsters = [monster, monster2, monster3]
+    
+        targetExperience = monster._experience * (1 + bonusDifficulty)
+        targetMoney = math.floor(targetExperience/constants.BattleEngine.MONEY_CONSTANT)
+
+        #Test
+        rawInputMock = MagicMock(return_value = "Jack")
+        with patch('battle_engine.raw_input', create=True, new=rawInputMock):
+            result = _playerAttackPhase(player, monsters, bonusDifficulty, earnings)
+        
+        errorMsg = "Check that monsters list is unchanged."
+        self.assertEqual(monsters, [monster2, monster3], errorMsg)
+        errorMsg = "Health of other monsters affected."
+        self.assertEqual(monster2._hp, 10, errorMsg)
+        self.assertEqual(monster3._hp, 10, errorMsg)
+        
+        errorMsg = "money not returned correctly."
+        self.assertEqual(result[0], targetMoney + 100, errorMsg)
+        errorMsg = "experience not returned correctly."
+        self.assertEqual(result[1], targetExperience + 100, errorMsg)
 
 class ItemFindTest(unittest.TestCase):
     """
