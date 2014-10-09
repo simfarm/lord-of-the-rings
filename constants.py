@@ -468,7 +468,7 @@ class BattleEngine(object):
     """
     Constants for battle engine.
     """
-    RUN_PROBABILITY_SUCCESS = 1
+    RUN_PROBABILITY_SUCCESS = .8
     STANDARD_DEVIATION      = 3
     MONEY_CONSTANT          = 3
 
