@@ -17,7 +17,7 @@ def battle(player, context, monsters = None):
 
     @param player:     The player object.
     @param context:    Context constant for battle engine. Battle engine 
-                       behaves differently
+                       behaves differently.
                        in different contexts. Battles are either random battles 
                        or story-based battles (e.g., boss battles).
     @param monsters:   An optional parameter used for story-based battles. 
