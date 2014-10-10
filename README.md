@@ -13,9 +13,10 @@ Cities have the following:
 * Shops - allow for the purchasing of items.
 * Squares - allows the user to interface with sprites.
 
-Player can collect a vast array of items during the course of the game. Items come in four different types:
+Player can collect a vast array of items during the course of the game. Items come in five different types:
 * Weapons - add to player attack.
 * Armor - add to player defense. How this works: if player gets attacked for four damage and armor wields two damage, player only receives two damage.
+* Potions - disposable items that allow for player heal. There are a finite number of potions in the game.
 * Charms - may add bonuses to health, attack, and defense.
 * General items - have novelty and sell value. For instance: Gold Chunk.
 
@@ -48,11 +49,17 @@ You may be able to find the three elven rings randomly distributed throughout th
 Status
 =======
 
+Game is fully functioning but suffers from poor UI. I consider the following as next steps:
+* Create a robust parser that is used to solicit user response throughout the game. The current game's parsers are non-uniform  and require an exact match (for instance: "Attack" does nothing but "attack works). Parsers are distributed across the game code.
+* Create some sort of "Emperor's Aura" ability which autodefeats remaining enemies whose attack is less than player defense given that monsters that don't fit into this category have already been defeated.
 
 Installation
 =======
 
 No installation necessary, except certain modules required to run tests.
+
+To run the game, type:
+$ ./main.py
 
 Tests
 =======
