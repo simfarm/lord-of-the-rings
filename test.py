@@ -2863,38 +2863,6 @@ class monsterFactory(unittest.TestCase):
 
         errorMsg = "getMonsters () should have spawned five monsters but did not."
         self.assertEqual(len(spawn), 5, errorMsg)
-        
-    def testBonusDifficultySpawnNumber(self):
-        """
-        Tests that number spawn increases as a percentage over default as
-        bonusDifficulty increases.
-        """
-        from factories.monster_factory import getMonsters
-        import constants
-
-        constants.RegionType.ERIADOR = MagicMock(return_value=1)
-        
-        spawn = getMonsters(5, constants.RegionType.ERIADOR, 1)
-        errorMsg = "getMonsters () should have spawned ten monsters but did not."
-        self.assertEqual(len(spawn), 10, errorMsg)
-        
-        """
-        -Tests default monster creation, that monsters are in fact created.
-        -Testing difficulty feature - that default stats are implemented when
-        difficulty set to zero. 
-        -Testing difficulty feature - that monster stats increase as
-        percentage over default. For instance, difficulty = 1 should result
-        in monsters with 200% base monster stats.
-        -Testing difficulty feature - that default monster spawn occurs when
-        difficulty is set to zero.
-        -Testing difficulty feature - that monster spawn increases as a percentage
-        over default. For instance, difficulty = 1 should result in a 100% increase
-        in monster spawn over base.
-        -Testing that regional spawns work: that monster spawn reflects
-        regional monster distributions held in constants. 
-
-        Note params for getMonster: getMonsters(number, region, difficulty).
-        """
 
     def testDefaultStatGeneration(self):
         #Testing difficulty feature - that default stats are implemented when
