@@ -103,8 +103,6 @@ class Game(object):
         @return:              True if command will be executed successfully and 
                               False otherwise.
         """
-        space = self._player.getLocation()
-        
         #Check movement commands
         if isinstance(nextCommand, NorthCommand):
             if not self._player.canMoveNorth():

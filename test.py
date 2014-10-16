@@ -146,9 +146,51 @@ class ExecutionCheckTest(unittest.TestCase):
     
     def testNegativeCase(self):
         """
-        Here, player cannot move in any direction. Therefore _executionCheck() should 
-        return False for all movement commands.
+        Here, player cannot move in any direction. Therefore, all of the movement
+        commands should not work and executionCheck() should return False for all 
+        movement commands.
         """
+        from game import Game
+        from space import Space
+        from player import Player
+
+        from commands.north_command import NorthCommand
+        from commands.south_command import SouthCommand
+        from commands.east_command import EastCommand
+        from commands.west_command import WestCommand
+        
+        g = Game()
+        g._player = MagicMock()
+
+        g._player.canMoveNorth = MagicMock(return_value=False)
+        g._player.canMoveSouth = MagicMock(return_value=False)
+        g._player.canMoveEast = MagicMock(return_value=False)
+        g._player.canMoveWest = MagicMock(return_value=False)
+
+        northCmd = NorthCommand("north", "For movement", g._player)
+        southCmd = SouthCommand("south", "For movement", g._player)
+        eastCmd = EastCommand("east", "For movement", g._player)
+        westCmd = WestCommand("west", "For movement", g._player)
+        
+        nextCommand = northCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned False for northCmd but did not."
+        self.assertEqual(result, False, errorMsg)
+
+        nextCommand = southCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned False for southCmd but did not."
+        self.assertEqual(result, False, errorMsg)
+
+        nextCommand = eastCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned False for eastCmd but did not."
+        self.assertEqual(result, False, errorMsg)
+
+        nextCommand = westCmd
+        result = g._executionCheck(nextCommand)
+        errorMsg = "_executionCheck() should have returned False for westCmd but did not."
+        self.assertEqual(result, False, errorMsg)
 
 class ParserTest(unittest.TestCase):
     """
