@@ -192,6 +192,26 @@ class ExecutionCheckTest(unittest.TestCase):
         errorMsg = "_executionCheck() should have returned False for westCmd but did not."
         self.assertEqual(result, False, errorMsg)
 
+class BattlePhaseTest(unittest.TestCase):
+    """
+    Tests game._battlePhase(). 
+    """
+    def testPositiveCase(self):
+        """
+        Mocks battleProbability such that battle() should get called.
+        """
+        from game import Game
+        import constants
+        
+        g = Game()
+        g._player = MagicMock()
+        g._battleProbability = 1
+        battle_engine.battle = MagicMock()
+        
+        g._battlePhase()
+        battle_engine.battle.assert_called_with(self._player, 
+            constants.BattleEngineContext.RANDOM)
+        
 class ParserTest(unittest.TestCase):
     """
     Tests Parser class.
